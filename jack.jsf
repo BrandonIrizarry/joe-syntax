@@ -41,8 +41,8 @@
 	"\n"		idle
 
 :zero 	Constant
-	*		idle		noeat
-	"0-9"		error		recolor=-2
+	*			idle		noeat
+	"0-9a-zA-Z_"		error		recolor=-2
 
 # note the similarity to the 'string' rule
 # don't consume the terminating char, since it isn't part of the erroneous construct
@@ -52,6 +52,7 @@
 
 :digit  Constant
 	*		idle		noeat
+	"a-zA-Z_"	error		recolor=-2
 	"0-9"		digit		recolor=-1
 
 :string	Constant
