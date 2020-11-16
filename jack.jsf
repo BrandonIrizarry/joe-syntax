@@ -1,0 +1,116 @@
+# JOE syntax highlight file for JACK (nand2tetris)
+# Based on the one for JAVA ('java.jsf')
+# Brandon C. Irizarry (brandon.irizarry@gmail.com)
+# 11/15/20
+
+=Idle
+=Comment 	green
+=Constant 	cyan
+=Escape 	bold cyan
+=Type 		bold
+=Keyword 	bold
+=Subroutine	red
+=Library	magenta
+=Error		inverse		# use inverse video to highlight syntax errors
+
+:idle Idle
+	*		idle
+	"\n"		idle
+	"/"		maybe_comment
+	"0"		zero			recolor=-1
+	"1-9"		digit			recolor=-1
+	"\""		string			recolor=-1
+	"a-zA-Z_"	ident		mark	buffer
+
+:maybe_comment Idle
+	*		idle		noeat
+	"*"		comment		recolor=-2
+	"/"		line_comment	recolor=-2
+
+:comment Comment
+	*		comment
+	"*"		maybe_end_comment
+
+:maybe_end_comment Comment
+	*		comment		noeat
+	"/"		idle
+	"*"		maybe_end_comment
+
+:line_comment Comment
+	*		line_comment
+	"\n"		idle
+
+:zero 	Constant
+	*		idle		noeat
+	"0-9"		error		recolor=-2
+
+# note the similarity to the 'string' rule
+# don't consume the terminating char, since it isn't part of the erroneous construct
+:error	Error
+	*				error
+	"{}()[].,;+-*/&|<>=~ \t\n"	idle	noeat
+
+:digit  Constant
+	*		idle		noeat
+	"0-9"		digit		recolor=-1
+
+:string	Constant
+	*		string
+	"\""		idle
+
+:ident Idle
+	*		ident_end	noeat markend strings
+	"class"		kw
+	"constructor"	subroutine
+	"function"	subroutine
+	"method"	subroutine
+	"field"		kw
+	"static"	kw
+	"var"		kw
+	"int"		type
+	"char"		type
+	"boolean"	type
+	"void"		type
+	"true"		lit
+	"false"		lit
+	"null"		lit
+	"this"		kw
+	"let"		kw
+	"do"		kw
+	"if"		kw
+	"else"		kw
+	"while"		kw
+	"return"	kw
+	"Array"		library
+	"Output"	library
+	"Screen"	library
+	"String"	library
+	"Math"		library
+	"Memory"	library
+	"Sys"		library
+	"Keyboard"	library
+done
+	"a-zA-Z0-9_"	ident
+
+:type Type
+	*		idle		noeat
+
+:kw Keyword
+	*		idle		noeat
+
+:lit Constant
+	*		idle		noeat
+
+:subroutine Subroutine
+	*		idle		noeat
+
+:library Library
+	*		idle		noeat
+
+:ident_end Idle
+	*		idle		noeat
+	" "		ident_end
+	"("		method_end	noeat recolormark
+
+#:method_end Methods
+#	*		idle		noeat
